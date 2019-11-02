@@ -51,6 +51,7 @@ var DomoForm = function DomoForm(props) {
 };
 
 var DomoList = function DomoList(props) {
+    console.log(props);
     if (props.domos.length === 0) {
         return React.createElement(
             "div",
@@ -105,7 +106,48 @@ var loadDomosFromServer = function loadDomosFromServer() {
     });
 };
 
+var ProfileWindow = function ProfileWindow(props) {
+    return React.createElement(
+        "div",
+        null,
+        React.createElement("img", { src: "/assets/img/domoface.jpeg", alt: "domo face", className: "domoFace" }),
+        React.createElement(
+            "h3",
+            null,
+            "Profile: "
+        ),
+        React.createElement(
+            "h3",
+            null,
+            "Username: "
+        )
+    );
+};
+
+var createProfileWindow = function createProfileWindow(csrf) {
+    ReactDOM.render(React.createElement(ProfileWindow, { csrf: csrf }), document.querySelector("#domos"));
+};
+
 var setup = function setup(csrf) {
+    var profileButton = document.querySelector("#profileButton");
+
+    profileButton.addEventListener("click", function (e) {
+        e.preventDefault();
+        createProfileWindow(csrf);
+        return false;
+    });
+
+    domosButton.addEventListener("click", function (e) {
+        e.preventDefault();
+        ReactDOM.render(React.createElement(DomoForm, { csrf: csrf }), document.querySelector("#makeDomo"));
+
+        ReactDOM.render(React.createElement(DomoList, { domos: [] }), document.querySelector("#domos"));
+
+        loadDomosFromServer();
+    });
+
+    // default
+
     ReactDOM.render(React.createElement(DomoForm, { csrf: csrf }), document.querySelector("#makeDomo"));
 
     ReactDOM.render(React.createElement(DomoList, { domos: [] }), document.querySelector("#domos"));

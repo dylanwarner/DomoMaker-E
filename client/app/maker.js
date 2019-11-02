@@ -37,6 +37,7 @@ const DomoForm = (props) => {
 };
 
 const DomoList = function(props) {
+    console.log(props);
     if(props.domos.length === 0) {
         return (
             <div className="domoList">
@@ -71,7 +72,47 @@ const loadDomosFromServer = () => {
     });
 };
 
+const ProfileWindow = (props) => {
+    return (
+        <div>
+            <img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace" />
+            <h3>Profile: </h3>
+            <h3>Username: </h3>
+        </div>
+    );
+};
+
+const createProfileWindow = (csrf) => {
+    ReactDOM.render(
+        <ProfileWindow csrf={csrf} />,
+        document.querySelector("#domos")     
+    );
+};
+
 const setup = function(csrf) {
+    const profileButton = document.querySelector("#profileButton");
+
+    profileButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        createProfileWindow(csrf);
+        return false;
+    });
+
+    domosButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        ReactDOM.render(
+            <DomoForm csrf={csrf} />, document.querySelector("#makeDomo")
+        );
+    
+        ReactDOM.render(
+            <DomoList domos={[]} />, document.querySelector("#domos")
+        );
+    
+        loadDomosFromServer();
+    });
+
+    // default
+
     ReactDOM.render(
         <DomoForm csrf={csrf} />, document.querySelector("#makeDomo")
     );
